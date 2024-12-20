@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "target": "ES2019", // Specify ECMAScript target version
+    "module": "NodeNext",
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+    "skipLibCheck": true, // Skip type checking of declaration files
+
+    "rootDir": "./lib", // Specify the root directory of input files
+    "noEmit": false,
+    "outDir": "./dist" // Specify an output directory for all emitted files
+  },
+  "include": [
+    "lib/**/*" // Include all TypeScript files in the src directory
+  ],
+  "exclude": [
+    "node_modules" // Exclude node_modules directory
+    // "**/*.test.ts" // Exclude test files
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@albatrossai/albatross-sdk",
+  "version": "0.0.0",
+  "main": "dist/client.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Albatross AI",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
