@@ -78,8 +78,30 @@ class Client {
     useCase: { uuid: string };
     context: { [k: string]: string };
     actions: { [k: string]: string }[];
-  }) => {
+  }): Promise<{
+    ordering: { [key: string]: number };
+    datapoint: any;
+    id: string;
+  }> => {
     const url = `${this.baseUrl}/use-case/prediction`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(payload),
+    });
+
+    await this.handleNotOk(response);
+
+    return response.json();
+  };
+
+  feedback = async (payload: {
+    modelUuid: string;
+    predictionUuid: string;
+    value: { [k: string]: any };
+  }) => {
+    const url = `${this.baseUrl}/feedback`;
 
     const response = await fetch(url, {
       method: "POST",
