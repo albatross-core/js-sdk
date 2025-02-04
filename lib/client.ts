@@ -10,6 +10,25 @@ export interface Event {
   timestamp?: string;
 }
 
+export type PredictionUnit = { [k: string]: string };
+
+export interface DataPoint {
+  actions: string[];
+  context_features: any;
+  action_features: any;
+  rewards: any;
+  ordering: {
+    [k: string]: number;
+  };
+  scores: {
+    [k: string]: number;
+  };
+  is_randomized: boolean;
+  propensities: {
+    [k: string]: number;
+  };
+}
+
 class Client {
   headers: Record<string, string>;
   constructor(
@@ -76,11 +95,11 @@ class Client {
 
   prediction = async (payload: {
     useCase: { uuid: string };
-    context: { [k: string]: string };
-    actions: { [k: string]: string }[];
+    context: PredictionUnit;
+    actions: PredictionUnit[];
   }): Promise<{
     ordering: { [key: string]: number };
-    datapoint: any;
+    datapoint: DataPoint;
     id: string;
   }> => {
     const url = `${this.baseUrl}/use-case/prediction`;
