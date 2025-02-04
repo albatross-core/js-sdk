@@ -15,5 +15,8 @@
   "description": "",
   "devDependencies": {
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@types/bun": "^1.2.2"
   }
 }

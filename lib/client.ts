@@ -73,6 +73,24 @@ class Client {
 
     return response.json();
   }
+
+  prediction = async (payload: {
+    useCase: { uuid: string };
+    context: { [k: string]: string };
+    actions: { [k: string]: string }[];
+  }) => {
+    const url = `${this.baseUrl}/use-case/prediction`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(payload),
+    });
+
+    await this.handleNotOk(response);
+
+    return response.json();
+  };
 }
 
 export default Client;
