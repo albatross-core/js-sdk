@@ -116,7 +116,7 @@ class Client {
   };
 
   feedback = async (payload: {
-    modelUuid: string;
+    modelUuid?: string;
     predictionUuid: string;
     value: { [k: string]: any };
   }) => {
