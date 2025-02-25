@@ -51,3 +51,47 @@ await client.events.track(event);
 ```
 
 
+## Custom Request Handler
+
+The Albatross Client accepts a custom request handler through its constructor, allowing you to replace the default `fetch`-based implementation. This is particularly useful in environments where `fetch` is unavailable (like older Node.js versions) or when you need special request handling. Simply implement a function matching the `makeRequest` signature and pass it to the Client constructor. For example, you can use Axios, XMLHttpRequest, or Node's http module as alternatives. This flexibility ensures the Albatross Client works across various JavaScript environments while maintaining consistent API interactions.
+
+### Example: Using Axios
+
+```typescript
+import axios from 'axios';
+import Client from './albatross-client';
+
+// Custom makeRequest implementation using Axios
+const axiosRequest = async <A, B extends Record<string, any>>({
+  url,
+  method = "GET",
+  data,
+  headers,
+}: MakeRequestInputs<B>): Promise<A> => {
+  try {
+    const response = await axios({
+      url,
+      method,
+      data,
+      headers
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(
+        `Request failed: ${error.response.status} ${error.response.statusText} ${JSON.stringify(error.response.data)}`
+      );
+    }
+    throw error;
+  }
+};
+
+// Initialize client with custom request handler
+const client = new Client(
+  "your-token",
+  "your-instance-uuid",
+  "https://app.usealbatross.ai/api",
+  axiosRequest
+);
+```
+
