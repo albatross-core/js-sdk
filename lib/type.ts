@@ -1,17 +1,18 @@
 export interface Event {
-  units: Record<string, string>; // unit_uuid: unit_value
-  value?: string;
-  eventType: string; // uuid
+  eventType: string; // name (or uuid)
   payload?: Record<string, any>;
-  timestamp?: string;
+  timestamp?: string; // timestamp can be overriden
+  // deprecated
+  units?: Record<string, string>; // essentially deprecated
+  value?: string; // essentially deprecated
 }
 
 export type PredictionUnit = { [k: string]: string };
 
 export interface DataPoint {
   actions: string[];
-  context_features: any;
-  action_features: any;
+  context_features: Record<string, string>;
+  action_features: Record<string, string>[];
   rewards: any;
   ordering: {
     [k: string]: number;
