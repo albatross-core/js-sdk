@@ -1,6 +1,8 @@
 import * as Request from "./request";
-import { DataPoint, PredictionPayload } from "./type";
+import { DataPoint, Event, PredictionPayload } from "./type";
 import { flattenNested } from "./utils";
+
+export { DataPoint, Event, PredictionPayload };
 
 const hostDefault = "https://app.usealbatross.ai/api";
 
