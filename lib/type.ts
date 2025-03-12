@@ -1,6 +1,8 @@
 export interface Event {
   eventType: string; // name (or uuid)
   payload?: Record<string, any>;
+  predictionIds?: string[]; // uuids
+  predictionId?: string; // prediction uuid
   timestamp?: string; // timestamp can be overriden
   // deprecated
   units?: Record<string, string>; // essentially deprecated
