@@ -1,6 +1,6 @@
 {
   "name": "@albatrossai/albatross-sdk",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/client.js",
   "types": "dist/client.d.ts",
   "files": [
