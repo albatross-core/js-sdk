@@ -1,3 +1,5 @@
+import { stringify } from "csv-stringify/sync";
+
 interface NestedObject {
   [key: string]: any;
   nest?: Record<string, any>;
@@ -32,3 +34,44 @@ export function flattenNested(obj: NestedObject): FlattenedObject {
 
   return result;
 }
+
+const preFormatRow = (rowHeaders: string[], row: Record<string, any>) => {
+  const flattenedRow = flattenNested(row);
+  return rowHeaders.map((header) => {
+    const value = flattenedRow[header];
+
+    // Handle null/undefined
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    // Handle objects (including arrays)
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+
+    // Convert to string for other types
+    return String(value);
+  });
+};
+
+export const bodyToCSV = (data: Record<string, any>[]) => {
+  if (data.length === 0) {
+    throw new Error("data is empty");
+  }
+
+  const [row0] = data;
+  const rowHeaders: string[] = Object.keys(flattenNested(row0));
+  // Prepare data for csv-parse
+  const csvData = [
+    rowHeaders,
+    ...data.map((row) => preFormatRow(rowHeaders, row)),
+  ];
+
+  return stringify(csvData, {
+    delimiter: ",",
+    quote: true,
+    quoted_string: true,
+    header: false,
+  }).trim();
+};

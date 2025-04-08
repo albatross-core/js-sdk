@@ -1,6 +1,6 @@
 import * as Request from "./request";
-import { DataPoint, Event, PredictionPayload } from "./type";
-import { flattenNested } from "./utils";
+import { CatalogAddProps, DataPoint, Event, PredictionPayload } from "./type";
+import { bodyToCSV, flattenNested } from "./utils";
 
 export { DataPoint, Event, PredictionPayload };
 
@@ -40,15 +40,7 @@ class Client {
     return this.makeRequest({ url, headers: this.headers });
   }
 
-  catalogAdd = async ({
-    entity,
-    data,
-    mainUnit,
-  }: {
-    entity: string;
-    data: { [k: string]: any }[];
-    mainUnit?: string;
-  }) => {
+  catalogAdd = async ({ entity, data, mainUnit }: CatalogAddProps) => {
     const formattedData = data.map(flattenNested);
 
     return this.makeRequest({
@@ -57,6 +49,30 @@ class Client {
       data: { data: formattedData, entity, mainUnit },
       headers: this.headers,
     });
+  };
+
+  catalogCSVAdd = async ({
+    entity,
+    data,
+    mainUnit,
+  }: CatalogAddProps): Promise<{}> => {
+    const queryParams: Record<string, string | undefined> = {
+      entity,
+      mainUnit,
+    };
+    const queryParamsString: string = Object.entries(queryParams)
+      .filter((entry): entry is [string, string] => !!entry[1])
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+      .join("&");
+
+    const path = "/catalog/csv";
+    const url = this.baseUrl + path + "?" + queryParamsString;
+
+    const body: string = bodyToCSV(data);
+
+    const r = await fetch(url, { headers: this.headers, method: "PUT", body });
+
+    return r.json();
   };
 
   async putEvent(payload: Event): Promise<any> {
