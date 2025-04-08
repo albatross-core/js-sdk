@@ -56,10 +56,6 @@ class Client {
     data,
     mainUnit,
   }: CatalogAddProps): Promise<{}> => {
-    if (data.length === 0) {
-      throw new Error("data is empty");
-    }
-
     const queryParams: Record<string, string | undefined> = {
       entity,
       mainUnit,
@@ -72,9 +68,7 @@ class Client {
     const path = "/catalog/csv";
     const url = this.baseUrl + path + "?" + queryParamsString;
 
-    const [row0] = data;
-
-    const body: string = bodyToCSV(row0, data);
+    const body: string = bodyToCSV(data);
 
     const r = await fetch(url, { headers: this.headers, method: "PUT", body });
 

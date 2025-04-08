@@ -33,10 +33,12 @@ export function flattenNested(obj: NestedObject): FlattenedObject {
   return result;
 }
 
-export const bodyToCSV = (
-  row0: Record<string, any>,
-  data: Record<string, any>[]
-) => {
+export const bodyToCSV = (data: Record<string, any>[]) => {
+  if (data.length === 0) {
+    throw new Error("data is empty");
+  }
+
+  const [row0] = data;
   const rowHeaders: string[] = Object.keys(flattenNested(row0));
   return [
     rowHeaders.join(","),
