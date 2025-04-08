@@ -17,5 +17,7 @@
     "typescript": "^5.7.2",
     "@types/bun": "^1.2.2"
   },
-  "dependencies": {}
+  "peerDependencies": {
+    "csv-stringify": "^6.5.2"
+  }
 }

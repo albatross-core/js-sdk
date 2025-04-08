@@ -1,3 +1,5 @@
+import { stringify } from "csv-stringify/sync";
+
 interface NestedObject {
   [key: string]: any;
   nest?: Record<string, any>;
@@ -33,6 +35,22 @@ export function flattenNested(obj: NestedObject): FlattenedObject {
   return result;
 }
 
+const preFormatRow = (row: Record<string, any>) =>
+  Object.values(flattenNested(row)).map((value) => {
+    // Handle null/undefined
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    // Handle objects (including arrays)
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+
+    // Convert to string for other types
+    return String(value);
+  });
+
 export const bodyToCSV = (data: Record<string, any>[]) => {
   if (data.length === 0) {
     throw new Error("data is empty");
@@ -40,28 +58,13 @@ export const bodyToCSV = (data: Record<string, any>[]) => {
 
   const [row0] = data;
   const rowHeaders: string[] = Object.keys(flattenNested(row0));
-  return [
-    rowHeaders.join(","),
-    ...data.map((row) =>
-      Object.values(flattenNested(row))
-        .map((value) => {
-          if (value === null || value === undefined) {
-            return "";
-          }
+  // Prepare data for csv-parse
+  const csvData = [rowHeaders, ...data.map(preFormatRow)];
 
-          // Handle objects (including arrays)
-          if (typeof value === "object") {
-            // Convert to JSON string and properly escape for CSV
-            return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
-          }
-
-          if (typeof value === "string") {
-            return `"${value.replace(/"/g, '""').replace(/\n/g, "\\n")}"`;
-          }
-
-          return value;
-        })
-        .join(",")
-    ),
-  ].join("\n");
+  return stringify(csvData, {
+    delimiter: ",",
+    quote: true,
+    quoted_string:true,
+    header: false,
+  }).trim();
 };
