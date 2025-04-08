@@ -35,8 +35,11 @@ export function flattenNested(obj: NestedObject): FlattenedObject {
   return result;
 }
 
-const preFormatRow = (row: Record<string, any>) =>
-  Object.values(flattenNested(row)).map((value) => {
+const preFormatRow = (rowHeaders: string[], row: Record<string, any>) => {
+  const flattenedRow = flattenNested(row);
+  return rowHeaders.map((header) => {
+    const value = flattenedRow[header];
+
     // Handle null/undefined
     if (value === null || value === undefined) {
       return "";
@@ -50,6 +53,7 @@ const preFormatRow = (row: Record<string, any>) =>
     // Convert to string for other types
     return String(value);
   });
+};
 
 export const bodyToCSV = (data: Record<string, any>[]) => {
   if (data.length === 0) {
@@ -59,12 +63,15 @@ export const bodyToCSV = (data: Record<string, any>[]) => {
   const [row0] = data;
   const rowHeaders: string[] = Object.keys(flattenNested(row0));
   // Prepare data for csv-parse
-  const csvData = [rowHeaders, ...data.map(preFormatRow)];
+  const csvData = [
+    rowHeaders,
+    ...data.map((row) => preFormatRow(rowHeaders, row)),
+  ];
 
   return stringify(csvData, {
     delimiter: ",",
     quote: true,
-    quoted_string:true,
+    quoted_string: true,
     header: false,
   }).trim();
 };

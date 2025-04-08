@@ -17,6 +17,21 @@ describe("bodyToCSV", () => {
     expect(result).toBe(expectedCSV);
   });
 
+  it("should convert simple object (inconsistent order) array to CSV", () => {
+    const input = [
+      { name: "John Doe", age: 30, active: true },
+      { age: 25, name: "Jane Smith", active: false },
+    ];
+
+    const expectedCSV =
+      '"name","age","active"\n' +
+      '"John Doe","30","true"\n' +
+      '"Jane Smith","25","false"';
+
+    const result = bodyToCSV(input);
+    expect(result).toBe(expectedCSV);
+  });
+
   it("should handle nested objects", () => {
     const input = [
       {
