@@ -32,3 +32,34 @@ export function flattenNested(obj: NestedObject): FlattenedObject {
 
   return result;
 }
+
+export const bodyToCSV = (
+  row0: Record<string, any>,
+  data: Record<string, any>[]
+) => {
+  const rowHeaders: string[] = Object.keys(flattenNested(row0));
+  return [
+    rowHeaders.join(","),
+    ...data.map((row) =>
+      Object.values(flattenNested(row))
+        .map((value) => {
+          if (value === null || value === undefined) {
+            return "";
+          }
+
+          // Handle objects (including arrays)
+          if (typeof value === "object") {
+            // Convert to JSON string and properly escape for CSV
+            return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+          }
+
+          if (typeof value === "string") {
+            return `"${value.replace(/"/g, '""').replace(/\n/g, "\\n")}"`;
+          }
+
+          return value;
+        })
+        .join(",")
+    ),
+  ].join("\n");
+};

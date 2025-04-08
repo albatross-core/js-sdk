@@ -33,3 +33,10 @@ export interface PredictionPayload {
   context: PredictionUnit;
   actions: PredictionUnit[];
 }
+
+
+export interface CatalogAddProps {
+  entity: string;
+  data: Record<string, any>[];
+  mainUnit?: string;
+}
