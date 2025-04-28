@@ -75,13 +75,24 @@ class Client {
     return r.json();
   };
 
-  async putEvent(payload: Event): Promise<any> {
+  async putEvent(data: Event): Promise<any> {
     const url = `${this.baseUrl}/event`;
 
     return this.makeRequest({
       method: "PUT",
-      url: url,
-      data: payload,
+      url,
+      data,
+      headers: this.headers,
+    });
+  }
+
+  async putEventBatch(events: Event[]): Promise<any> {
+    const url = `${this.baseUrl}/event/batch`;
+
+    return this.makeRequest({
+      method: "PUT",
+      url,
+      data: { events },
       headers: this.headers,
     });
   }
