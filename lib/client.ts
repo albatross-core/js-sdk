@@ -40,8 +40,16 @@ class Client {
     return this.makeRequest({ url, headers: this.headers });
   }
 
-  catalogAdd = async ({ entity, data, mainUnit }: CatalogAddProps) => {
-    const formattedData = data.map(flattenNested);
+  catalogAdd = async ({
+    entity,
+    data,
+    mainUnit,
+    formatData,
+  }: CatalogAddProps) => {
+    const formattedData =
+      formatData === undefined || formatData === true
+        ? data.map(flattenNested)
+        : data;
 
     return this.makeRequest({
       url: this.baseUrl + "/catalog",
